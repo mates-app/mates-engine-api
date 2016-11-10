@@ -5,6 +5,9 @@ let PlusOperation = require('../ts/models/models').PlusOperation
 let NumberConfig = require('../ts/models/models').NumberConfig
 let ProblemNode = require('../ts/models/models').ProblemNode
 let ProblemSection = require('../ts/models/problem/ProblemSection').ProblemSection
+let $ = require('../ts/models/models')
+
+
 
 describe('Problem', ()=>{
     it('generation of problem', () =>{
@@ -12,30 +15,105 @@ describe('Problem', ()=>{
         let scopes = 2
         let numberConfig = new NumberConfig(1,10,0,[1])
         let constants = numberConfig.get(constantNumber)
+        
 
-        let node1 = new ProblemSection(
-            [new PlusOperation(constants[0], constants[1])], 0)
-        let node2 = new ProblemSection(
-            [new PlusOperation(constants[1], constants[2])], 1)
-        let node3 = new ProblemSection([
-            new ProblemSection(
-                [new PlusOperation(constants[3], constants[4])],1),
-            new ProblemSection(
-                [new PlusOperation(constants[5], constants[6]),
-                new PlusOperation(constants[6], constants[7])],1)
-        ], 2)
-        let node4 = new ProblemSection(
-            [new PlusOperation(constants[8], constants[9])], 1)
+        let problem = new $.ProblemItemList([
+            new $.ProblemItemNode(new MatesNumber(3,1,false)),
+            new $.ProblemItemOperator(new $.MultiplyOperation),
+            new $.ProblemItemNode(new MatesNumber(2,1,false)),
+            new $.ProblemItemOperator(new PlusOperation),
+            new $.ProblemItemNode(new MatesNumber(5,1,false)),
+            new $.ProblemItemOperator(new PlusOperation),
+            new $.ProblemItemNode(new MatesNumber(1,1,false)),
+            new $.ProblemItemOperator(new $.DivisionOperation),
+            new $.ProblemItemNode(new MatesNumber(3,1,false))
+        ])
 
-        console.log(
-            new ProblemSection([node1,node2,node3,node4],0).latex()
-        )
+        // let problem = new $.ProblemItemList([
+        //     new $.ProblemItemNode(constants[0]),
+        //     new $.ProblemItemOperator(1),
+        //     new $.ProblemItemNode(constants[1]),
+        //     new $.ProblemItemOperator(2),
+        //     new $.ProblemItemNode(constants[2]),
+        //     new $.ProblemItemOperator(3),
+        //     new $.ProblemItemNode(constants[3]),
+        //     new $.ProblemItemOperator(4),
+        //     new $.ProblemItemNode(constants[4])
+        // ])
+        
+        // console.log(problem.items)
+        console.log(problem.solveSelf())
+        
+     
+    })
 
-        console.log(node1.latex())
-        console.log(node2.latex())
-        console.log(node3.latex())
-        console.log(node4.latex())
+    it('problem with subSections', () =>{
+        let constantNumber = 10
+        let scopes = 2
+        let numberConfig = new NumberConfig(1,10,0,[1])
+        let constants = numberConfig.get(constantNumber)
+        
 
+        let problem = new $.ProblemItemList([
+            new $.ProblemItemNode(new MatesNumber(3,1,false)),
+            new $.ProblemItemOperator(new $.MultiplyOperation),
+            new $.ProblemItemList([
+                new $.ProblemItemNode(new MatesNumber(2,1,false)),
+                new $.ProblemItemOperator(new PlusOperation),
+                new $.ProblemItemNode(new MatesNumber(5,1,false))
+            ]),
+            new $.ProblemItemOperator(new PlusOperation),
+            new $.ProblemItemNode(new MatesNumber(1,1,false)),
+            new $.ProblemItemOperator(new $.DivisionOperation),
+            new $.ProblemItemNode(new MatesNumber(3,1,false))
+        ])
+
+        console.log(problem.solveSelf())
+        
+     
+    })
+    it('problem with two level subSections', () =>{
+        let constantNumber = 10
+        let scopes = 2
+        let numberConfig = new NumberConfig(1,10,0,[1])
+        let constants = numberConfig.get(constantNumber)
+        
+
+        let problem = new $.ProblemItemList([
+            new $.ProblemItemNode(new MatesNumber(5,1,false)),
+            new $.ProblemItemOperator(new $.MultiplyOperation),
+            new $.ProblemItemList([
+                new $.ProblemItemNode(new MatesNumber(1,1,false)),
+                new $.ProblemItemOperator(new PlusOperation),
+                new $.ProblemItemNode(new MatesNumber(3,1,false))
+            ]),
+            new $.ProblemItemOperator(new PlusOperation),
+            new $.ProblemItemList([
+                new $.ProblemItemList([
+                    new $.ProblemItemNode(new MatesNumber(5,1,false)),
+                    new $.ProblemItemOperator(new PlusOperation),
+                    new $.ProblemItemNode(new MatesNumber(1,1,false))
+                ]),
+                new $.ProblemItemOperator(new $.DivisionOperation),
+                new $.ProblemItemList([
+                    new $.ProblemItemNode(new MatesNumber(4,1,false)),
+                    new $.ProblemItemOperator(new PlusOperation),
+                    new $.ProblemItemNode(new MatesNumber(2,1,false)),
+                    new $.ProblemItemOperator(new $.DivisionOperation),
+                    new $.ProblemItemNode(new MatesNumber(3,1,false))
+                ])
+            ]),
+            new $.ProblemItemOperator(new $.MultiplyOperation),
+            new $.ProblemItemList([
+                new $.ProblemItemNode(new MatesNumber(3,1,false)),
+                new $.ProblemItemOperator(new PlusOperation),
+                new $.ProblemItemNode(new MatesNumber(5,1,false))
+            ]),
+        ])
+
+        console.log(problem.solveSelf())
+        
+     
     })
 })
 
@@ -44,3 +122,4 @@ let printValues = (n) => {
 }
 
 let getScope = (scopes) => Math.floor(Math.random() * scopes)
+

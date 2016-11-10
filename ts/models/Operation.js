@@ -7,13 +7,17 @@ var __extends = (this && this.__extends) || function (d, b) {
 var MatesNumber_1 = require('./MatesNumber');
 var Operation = (function () {
     function Operation(sign, precedence, leftOperand, rightOperand) {
+        var _this = this;
+        if (leftOperand === void 0) { leftOperand = null; }
+        if (rightOperand === void 0) { rightOperand = null; }
         this.sign = sign;
         this.precedence = precedence;
         this.leftOperand = leftOperand;
         this.rightOperand = rightOperand;
+        this.isAvailable = function () { return _this.leftOperand != null && _this.rightOperand != null; };
     }
     Operation.prototype.getValue = function () {
-        return null;
+        return;
     };
     return Operation;
 }());
@@ -21,6 +25,8 @@ exports.Operation = Operation;
 var PlusOperation = (function (_super) {
     __extends(PlusOperation, _super);
     function PlusOperation(leftOperand, rightOperand, sign, precedence) {
+        if (leftOperand === void 0) { leftOperand = null; }
+        if (rightOperand === void 0) { rightOperand = null; }
         if (sign === void 0) { sign = false; }
         if (precedence === void 0) { precedence = 0; }
         _super.call(this, sign, precedence, leftOperand, rightOperand);
@@ -39,6 +45,7 @@ var PlusOperation = (function (_super) {
         var sign = dividend < 0;
         dividend = dividend < 0 ? dividend * -1 : dividend;
         sign = this.sign ? !sign : sign;
+        console.log(a.dividend + " + " + b.dividend + " = " + dividend);
         return new MatesNumber_1.MatesNumber(dividend, divisor, sign);
     };
     PlusOperation.prototype.latex = function () {
@@ -47,3 +54,68 @@ var PlusOperation = (function (_super) {
     return PlusOperation;
 }(Operation));
 exports.PlusOperation = PlusOperation;
+var MultiplyOperation = (function (_super) {
+    __extends(MultiplyOperation, _super);
+    function MultiplyOperation(leftOperand, rightOperand, sign, precedence) {
+        if (leftOperand === void 0) { leftOperand = null; }
+        if (rightOperand === void 0) { rightOperand = null; }
+        if (sign === void 0) { sign = false; }
+        if (precedence === void 0) { precedence = 0; }
+        _super.call(this, sign, precedence, leftOperand, rightOperand);
+        this.leftOperand = leftOperand;
+        this.rightOperand = rightOperand;
+        this.sign = sign;
+        this.precedence = precedence;
+    }
+    MultiplyOperation.prototype.getValue = function () {
+        var a = this.leftOperand;
+        var b = this.rightOperand;
+        console.log("a: " + a + " \nb: " + b);
+        var signA = a.sign ? -1 : 1;
+        var signB = b.sign ? -1 : 1;
+        var dividend = signA * signB * a.dividend * b.dividend;
+        var divisor = a.divisor * b.divisor;
+        var sign = dividend < 0;
+        dividend = dividend < 0 ? dividend * -1 : dividend;
+        sign = this.sign ? !sign : sign;
+        console.log(a.dividend + " * " + b.dividend + " = " + dividend);
+        return new MatesNumber_1.MatesNumber(dividend, divisor, sign);
+    };
+    MultiplyOperation.prototype.latex = function () {
+        return '';
+    };
+    return MultiplyOperation;
+}(Operation));
+exports.MultiplyOperation = MultiplyOperation;
+var DivisionOperation = (function (_super) {
+    __extends(DivisionOperation, _super);
+    function DivisionOperation(leftOperand, rightOperand, sign, precedence) {
+        if (leftOperand === void 0) { leftOperand = null; }
+        if (rightOperand === void 0) { rightOperand = null; }
+        if (sign === void 0) { sign = false; }
+        if (precedence === void 0) { precedence = 0; }
+        _super.call(this, sign, precedence, leftOperand, rightOperand);
+        this.leftOperand = leftOperand;
+        this.rightOperand = rightOperand;
+        this.sign = sign;
+        this.precedence = precedence;
+    }
+    DivisionOperation.prototype.getValue = function () {
+        var a = this.leftOperand;
+        var b = this.rightOperand;
+        var signA = a.sign ? -1 : 1;
+        var signB = b.sign ? -1 : 1;
+        var dividend = signA * signB * a.dividend * b.divisor;
+        var divisor = a.divisor * b.dividend;
+        var sign = dividend < 0;
+        dividend = dividend < 0 ? dividend * -1 : dividend;
+        sign = this.sign ? !sign : sign;
+        console.log(a.dividend + " / " + b.dividend + " = " + dividend);
+        return new MatesNumber_1.MatesNumber(dividend, divisor, sign);
+    };
+    DivisionOperation.prototype.latex = function () {
+        return '';
+    };
+    return DivisionOperation;
+}(Operation));
+exports.DivisionOperation = DivisionOperation;
