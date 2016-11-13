@@ -8,6 +8,8 @@ import {
 
 export interface ProblemItem{
     solveSelf()
+    print():string
+    solution():MatesNumber
 }
 
 export class ProblemItemList implements ProblemItem {
@@ -18,10 +20,31 @@ export class ProblemItemList implements ProblemItem {
     solveSelf():ProblemItem{
         this.items = this.items
             .map(item => item instanceof ProblemItemList ? item.solveSelf() : item)
-            console.log("ASDASDASDASD", this.items)
         this.resolveOperations()
 
         return this.items[0]
+    }
+
+    solution():MatesNumber{
+        let node:ProblemItem = this.solveSelf()
+        return (<MatesNumber>(<ProblemItemNode>node).valuable).simplify()
+    }
+
+    print():string{
+        let result:string = ''
+        let levels:number = this.analyzeLevels()
+        
+        result = this.items
+            .map(item => item.print())
+            .reduce((acc, curr) => acc + curr, '')
+        
+        result = levels === 0 
+                    ? `( ${result} )`
+                    : levels === 1
+                        ? `[ ${result} ]`
+                        : `{ ${result} }`
+
+        return result
     }
 
     private resolveOperations(){
@@ -31,9 +54,6 @@ export class ProblemItemList implements ProblemItem {
             ? index = this.items.findIndex(this.hasPrecedence)
             : index = this.items.findIndex((item) => item instanceof ProblemItemOperator)
         
-
-
-        console.log(`index ${index}`)
         if(index > 0){
             this.items.splice(
                         index-1, 
@@ -43,22 +63,35 @@ export class ProblemItemList implements ProblemItem {
                                 (<ProblemItemNode>this.items[index-1]).valuable, 
                                 (<ProblemItemNode>this.items[index+1]).valuable)))
             
-            console.log(
-                this.items
-                    .filter(item => item instanceof ProblemItemNode)
-                    .map(   item => (<MatesNumber>(<ProblemItemNode>item).valuable).dividend)
-            )                                
+            // console.log(
+            //     this.items
+            //         .filter(item => item instanceof ProblemItemNode)
+            //         .map(   item => (<MatesNumber>(<ProblemItemNode>item).valuable).dividend)
+            // )                                
             this.resolveOperations()
         }
     }
 
-    private hasSubList = item => item instanceof ProblemItemList
+    private analyzeLevels = ():number =>{
+        let levels = 0;
+        if(this.items.some(this.isSubList)){
+            levels = 1
+            if((<ProblemItemList[]>this.items
+            .filter(this.isSubList))
+            .some(sublist => sublist.items.some(this.isSubList)))
+                levels = 2
+        }
+        return levels
+        
+    }
+    private isSubList = item => item instanceof ProblemItemList
 
     private hasPrecedence = item =>
      item instanceof ProblemItemOperator 
         && (item.operation instanceof MultiplyOperation 
         || item.operation instanceof DivisionOperation)
-    
+        
+
 
 }
 
@@ -67,6 +100,14 @@ export class ProblemItemNode implements ProblemItem {
 
     solveSelf(){
         this.valuable = this.valuable.getValue()
+    }
+
+    print():string{
+        return (<MatesNumber>this.valuable).latex()
+    }
+
+    solution():MatesNumber{
+        return <MatesNumber>this.valuable
     }
 }
 
@@ -80,8 +121,12 @@ export class ProblemItemOperator implements ProblemItem {
         return <MatesNumber>this.operation.getValue()
     }
 
-    print(a:Valuable, b:Valuable):string{
-        return ''+(<MatesNumber>a).rawNumber() + (<MatesNumber>b).rawNumber()
+    print():string{
+        return this.operation.latex()
+    }
+
+    solution():MatesNumber{
+        return 
     }
 
 

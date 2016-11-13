@@ -1,5 +1,4 @@
-import { MatesNumber } from './MatesNumber'
-import { Valuable} from './Valuable'
+import { MatesNumber, Valuable } from '../models'
 
 export class Operation implements Valuable{
     constructor(
@@ -11,6 +10,10 @@ export class Operation implements Valuable{
 
     getValue():Valuable{
         return  
+    }
+
+    latex():string{
+        return
     }
 
     isAvailable = ():boolean => this.leftOperand != null && this.rightOperand != null
@@ -27,7 +30,6 @@ export class PlusOperation extends Operation{
     }
 
     getValue():Valuable{
-        
         let a:MatesNumber = this.leftOperand
         let b:MatesNumber = this.rightOperand
         let signA:number = a.sign ? -1 : 1
@@ -41,14 +43,11 @@ export class PlusOperation extends Operation{
         dividend = dividend < 0 ? dividend * -1 : dividend
         sign = this.sign ? !sign : sign
 
-        console.log(`${a.dividend} + ${b.dividend} = ${dividend}`)
         return new MatesNumber(dividend, divisor, sign)
     }
 
-    latex():string{
-        
-        
-        return ''
+    latex():string{        
+        return '+'
     }
 
 }
@@ -69,7 +68,6 @@ export class MultiplyOperation extends Operation{
         
         let a:MatesNumber = this.leftOperand
         let b:MatesNumber = this.rightOperand
-        console.log(`a: ${a} \nb: ${b}`)
         let signA:number = a.sign ? -1 : 1
         let signB:number = b.sign ? -1 : 1
 
@@ -81,14 +79,11 @@ export class MultiplyOperation extends Operation{
         dividend = dividend < 0 ? dividend * -1 : dividend
         sign = this.sign ? !sign : sign
         
-        console.log(`${a.dividend} * ${b.dividend} = ${dividend}`)
         return new MatesNumber(dividend, divisor, sign)
     }
 
     latex():string{
-        
-        
-        return ''
+        return '\\centerdot'
     }
 
 }
@@ -118,12 +113,45 @@ export class DivisionOperation extends Operation{
         dividend = dividend < 0 ? dividend * -1 : dividend
         sign = this.sign ? !sign : sign
         
-        console.log(`${a.dividend} / ${b.dividend} = ${dividend}`)
         return new MatesNumber(dividend, divisor, sign)
     }
 
     latex():string{
-        return ''
+        return '/'
+    }
+
+}
+
+
+export class MinusOperation extends Operation{
+    constructor(
+        public leftOperand:MatesNumber = null,
+        public rightOperand:MatesNumber = null,
+        public sign:boolean = false,
+        public precedence:number = 0
+    ){
+        super(sign, precedence, leftOperand, rightOperand)
+    }
+
+    getValue():Valuable{
+        let a:MatesNumber = this.leftOperand
+        let b:MatesNumber = this.rightOperand
+        let signA:number = a.sign ? -1 : 1
+        let signB:number = b.sign ? -1 : 1
+
+        let dividend:number = signA * a.dividend * b.divisor - signB * b.dividend * a.divisor
+        
+        let divisor: number = a.divisor * b.divisor
+        let sign:boolean = dividend < 0
+        
+        dividend = dividend < 0 ? dividend * -1 : dividend
+        sign = this.sign ? !sign : sign
+
+        return new MatesNumber(dividend, divisor, sign)
+    }
+
+    latex():string{
+        return '-'
     }
 
 }

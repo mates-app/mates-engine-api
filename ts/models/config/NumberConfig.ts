@@ -1,4 +1,4 @@
-import { MatesNumber } from './MatesNumber'
+import { MatesNumber } from '../models'
 
 export class NumberConfig{
     constructor(

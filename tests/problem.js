@@ -4,9 +4,8 @@ let MatesNumber = require('../ts/models/models').MatesNumber
 let PlusOperation = require('../ts/models/models').PlusOperation
 let NumberConfig = require('../ts/models/models').NumberConfig
 let ProblemNode = require('../ts/models/models').ProblemNode
-let ProblemSection = require('../ts/models/problem/ProblemSection').ProblemSection
 let $ = require('../ts/models/models')
-
+require('../ts/models/models')
 
 
 describe('Problem', ()=>{
@@ -28,22 +27,8 @@ describe('Problem', ()=>{
             new $.ProblemItemOperator(new $.DivisionOperation),
             new $.ProblemItemNode(new MatesNumber(3,1,false))
         ])
-
-        // let problem = new $.ProblemItemList([
-        //     new $.ProblemItemNode(constants[0]),
-        //     new $.ProblemItemOperator(1),
-        //     new $.ProblemItemNode(constants[1]),
-        //     new $.ProblemItemOperator(2),
-        //     new $.ProblemItemNode(constants[2]),
-        //     new $.ProblemItemOperator(3),
-        //     new $.ProblemItemNode(constants[3]),
-        //     new $.ProblemItemOperator(4),
-        //     new $.ProblemItemNode(constants[4])
-        // ])
         
-        // console.log(problem.items)
-        console.log(problem.solveSelf())
-        
+        console.log(problem.print())
      
     })
 
@@ -68,8 +53,8 @@ describe('Problem', ()=>{
             new $.ProblemItemNode(new MatesNumber(3,1,false))
         ])
 
-        console.log(problem.solveSelf())
-        
+        // console.log(problem.solveSelf())
+        console.log(problem.print())
      
     })
     it('problem with two level subSections', () =>{
@@ -111,8 +96,8 @@ describe('Problem', ()=>{
             ]),
         ])
 
-        console.log(problem.solveSelf())
-        
+        // console.log(problem.solveSelf())
+        console.log(problem.print())
      
     })
 })
