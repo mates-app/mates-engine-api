@@ -57,7 +57,7 @@ describe('MinusOperation', () =>{
         })
     })
 
-
+console.log('soy barbi')
 
 
 })
