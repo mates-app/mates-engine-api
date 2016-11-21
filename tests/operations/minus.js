@@ -35,7 +35,7 @@ describe('MinusOperation', () =>{
             assert.equal(result.divisor, 24)
             assert.equal(result.sign, true)
         })
-        it('One Operand and Operation with sign: -(-2/3 - 5/8)', () =>{
+       /* it('One Operand and Operation with sign: -(-2/3 - 5/8)', () =>{
             let a = new MatesNumber(2,3,true)
             let b = new MatesNumber(5,8,false)
 
@@ -44,7 +44,7 @@ describe('MinusOperation', () =>{
             assert.equal(result.dividend, 31)
             assert.equal(result.divisor, 24)
             assert.equal(result.sign, false)
-        })
+        })*/
         it('Second Operand with sign: 2/3 + (-5/8)', () =>{
             let a = new MatesNumber(2,3,false)
             let b = new MatesNumber(5,8,true)
@@ -56,8 +56,6 @@ describe('MinusOperation', () =>{
             assert.equal(result.sign, false)
         })
     })
-
-console.log('soy barbi')
 
 
 })
